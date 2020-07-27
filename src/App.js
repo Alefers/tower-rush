@@ -1,15 +1,13 @@
 import React from 'react';
 import './App.scss';
-import Fight from './app/Fight';
-import {BrowserRouter, Route} from 'react-router-app';
+import FightContainer from './app/fight/FightContainer';
+import {Route} from 'react-router-dom';
 
 const App = () => {
     return (
-        <BrowserRouter>
-            <div className="app-wrapper">
-                <Route path="/fight" component={Fight}/>
-            </div>
-        </BrowserRouter>
+        <div className="app-wrapper">
+            <Route path="/fight" component={FightContainer}/>
+        </div>
     );
 }
 
