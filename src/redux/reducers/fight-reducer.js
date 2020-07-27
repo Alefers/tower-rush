@@ -1,0 +1,3 @@
+const fightReducer = (state, action) => {
+
+}
