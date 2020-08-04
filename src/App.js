@@ -1,5 +1,5 @@
 import React from 'react';
-import './App.scss';
+import './scss/app.scss';
 import FightContainer from './app/fight/FightContainer';
 import {Route} from 'react-router-dom';
 import Header from "./app/header/Header";

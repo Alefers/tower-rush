@@ -1,0 +1,80 @@
+.fight-room {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 800px;
+  margin: 0 auto;
+
+  .target {
+    width: 200px;
+    border: 1px solid #d1d1d1;
+    border-radius: 6px;
+    padding: 10px 10px 30px;
+    position: relative;
+    background: #f8f8f8;
+
+    .equipment {
+      width: 80%;
+      position: relative;
+      margin: 20px auto 0;
+
+      img {
+        width: 100%;
+        height: auto;
+      }
+      & > div {
+        position: absolute;
+        border: 1px solid #f2f2f2;
+        border-radius: 6px;
+      }
+    }
+    .bar + .bar {
+      margin-top: 3px;
+    }
+  }
+}
+%battle-btn {
+  position: absolute;
+  height: 30%;
+  width: 30%;
+  border-radius: 3px;
+  background: #fff;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.battle-controls {
+  position: relative;
+  height: 210px;
+  width: 210px;
+
+  .action-btn {
+    @extend %battle-btn;
+    border: 1px solid #000;
+    font-size: 25px;
+
+    &.jump {
+      top: 1.6666%;
+      left: 35%;
+    }
+    &.dash-to-right {
+      top: 35%;
+      right: 1.6666%;
+    }
+    &.dash-to-left {
+      top: 35%;
+      left: 1.6666%;
+    }
+    &.lean-down {
+      bottom: 1.6666%;
+      left: 35%;
+    }
+  }
+  .stance-btn {
+    @extend %battle-btn;
+    border: 1px solid red;
+    font-size: 40px;
+    top: 35%;
+    left: 35%;
+  }
+}

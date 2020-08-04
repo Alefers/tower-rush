@@ -1,0 +1,28 @@
+body, html {
+  min-height: 100%;
+}
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+body {
+  text-align: left;
+  direction: ltr;
+  font: normal 15px/1 'Roboto', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background: antiquewhite;
+}
+.app-wrapper {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+.content {
+  flex: 1;
+}
+
+.icon-rotate-90 i {transform: rotate(90deg);}
+.icon-rotate-180 i {transform: rotate(180deg);}
+.icon-rotate-270 i {transform: rotate(270deg);}
