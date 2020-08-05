@@ -1,6 +1,7 @@
 import React from 'react';
 import Target from "./Target";
 import BattleControls from "./BattleControls";
+import Chat from "../common/Chat";
 
 let playerStats = {
     maxE: 20,
@@ -18,11 +19,14 @@ let guardStats = {
 
 const  Fight = (props) => {
     return (
-        <div className="fight-room">
-            <Target stats={playerStats}/>
-            <BattleControls/>
-            <Target oposite={true} stats={guardStats}/>
-        </div>
+        <>
+            <div className="fight-room">
+                <Target stats={playerStats} />
+                <BattleControls />
+                <Target oposite={true} stats={guardStats} />
+            </div>
+            <Chat />
+        </>
     );
 }
 

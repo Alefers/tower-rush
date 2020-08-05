@@ -9,7 +9,8 @@ body, html {
 body {
   text-align: left;
   direction: ltr;
-  font: normal 15px/1 'Roboto', sans-serif;
+  font: normal 15px/1 $default-font;
+  color: $dark;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   background: antiquewhite;
@@ -21,6 +22,11 @@ body {
 }
 .content {
   flex: 1;
+}
+button {
+  outline: none;
+  cursor: pointer;
+  font: 500 14px/1.5 $default-font;
 }
 
 .icon-rotate-90 i {transform: rotate(90deg);}

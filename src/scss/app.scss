@@ -1,7 +1,10 @@
+@import "variables";
+
 @import "default";
 
 // Common components
 @import "common/bar";
+@import "common/chat";
 
 // Sections
 @import "header";

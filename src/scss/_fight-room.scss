@@ -1,8 +1,10 @@
+
+
 .fight-room {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  width: 800px;
+  width: 1000px;
   margin: 0 auto;
 
   .target {
@@ -34,47 +36,90 @@
   }
 }
 %battle-btn {
-  position: absolute;
-  height: 30%;
-  width: 30%;
+  height: 100%;
+  width: 100%;
   border-radius: 3px;
   background: #fff;
   display: flex;
   justify-content: center;
   align-items: center;
+  transition: all 0.2s ease;
+  border-width: 2px;
+  border-style: solid;
 }
 .battle-controls {
   position: relative;
-  height: 210px;
   width: 210px;
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
 
+  .btn-wrapper {
+    width: 70px;
+    height: 70px;
+    padding: 3px;
+  }
   .action-btn {
-    @extend %battle-btn;
-    border: 1px solid #000;
-    font-size: 25px;
+    height: 100%;
+    width: 100%;
+    border-radius: 6px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: all 0.3s ease;
+    border: 2px solid $dark;
 
-    &.jump {
-      top: 1.6666%;
-      left: 35%;
+    &.movement {
+      background: $light;
+      font-size: 30px;
+
+      &.selected {
+        background: red;
+        color: $light;
+      }
     }
-    &.dash-to-right {
-      top: 35%;
-      right: 1.6666%;
-    }
-    &.dash-to-left {
-      top: 35%;
-      left: 1.6666%;
-    }
-    &.lean-down {
-      bottom: 1.6666%;
-      left: 35%;
+    &.stance {
+      font-size: 40px;
+      color: $light;
+
+      &.attack {
+        background: #d00000;
+      }
+      &.defence {
+        background: #076d00;
+      }
+      &.distance {
+        background: #caa82c;
+      }
     }
   }
-  .stance-btn {
-    @extend %battle-btn;
-    border: 1px solid red;
-    font-size: 40px;
-    top: 35%;
-    left: 35%;
+  .stance-set {
+    position: absolute;
+    z-index: 1;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(255,255,255,.9);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-radius: 6px;
+  }
+  .end-turn {
+    padding: 12px 24px;
+    border: 2px solid $dark;
+    border-radius: 6px;
+    background: $dark;
+    color: $light;
+    text-transform: uppercase;
+    font-size: 14px;
+    margin: 30px auto 0;
+    transition: all 0.3s ease;
+
+    &:hover {
+      background: $light;
+      color: $dark;
+    }
   }
 }
