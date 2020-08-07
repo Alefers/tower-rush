@@ -1,12 +1,6 @@
 import React, {useState} from 'react';
+import ControlButton, {MOVE_NOT, MOVE_DOWN, MOVE_RIGHT, MOVE_LEFT, MOVE_JUMP} from "./ControlButton";
 
-
-const
-    MOVE_NOT = 0,
-    MOVE_JUMP = 1,
-    MOVE_LEFT = 2,
-    MOVE_RIGHT = 3,
-    MOVE_DOWN = 4;
 
 const  BattleControls = (props) => {
 
@@ -44,6 +38,13 @@ const  BattleControls = (props) => {
         }
     }
 
+    const act = () => {
+        props.act({
+            movementDirection,
+            stance: currentStance
+        });
+    }
+
     let stances = stanceSet.map((s, idx) => {
         return (
             <div className="btn-wrapper" key={idx}>
@@ -64,27 +65,11 @@ const  BattleControls = (props) => {
             <div className="battle-controls">
                 {/* top row */}
                 <div className="btn-wrapper" />
-                <div className="btn-wrapper">
-                    <div
-                        className={'action-btn movement jump icon-rotate-270 ' + (movementDirection === MOVE_JUMP ? 'selected' : '')}
-                        title="Подпрыгнуть"
-                        onClick={() => changeMovementDirection(MOVE_JUMP)}
-                    >
-                        <i className="tr-bordered-arrow"/>
-                    </div>
-                </div>
+                <ControlButton action={MOVE_JUMP} change={changeMovementDirection} selected={movementDirection === MOVE_JUMP}/>
                 <div className="btn-wrapper" />
 
                 {/* middle row */}
-                <div className="btn-wrapper">
-                    <div
-                        className={'action-btn movement dash-to-left icon-rotate-180 ' + (movementDirection === MOVE_LEFT ? 'selected' : '')}
-                        title="Отскочить в лево"
-                        onClick={() => changeMovementDirection(MOVE_LEFT)}
-                    >
-                        <i className="tr-bordered-arrow"/>
-                    </div>
-                </div>
+                <ControlButton action={MOVE_LEFT} change={changeMovementDirection} selected={movementDirection === MOVE_LEFT}/>
                 <div className="btn-wrapper">
                     <div
                         className={'action-btn stance ' + currentStance.stance}
@@ -95,28 +80,14 @@ const  BattleControls = (props) => {
                         <i className={'tr-' + currentStance.stance}/>
                     </div>
                 </div>
-                <div className="btn-wrapper">
-                    <div
-                        className={'action-btn movement dash-to-right ' + (movementDirection === MOVE_RIGHT ? 'selected' : '')}
-                        title="Отскочить в право"
-                        onClick={() => changeMovementDirection(MOVE_RIGHT)}
-                    >
-                        <i className="tr-bordered-arrow"/>
-                    </div>
-                </div>
+                <ControlButton action={MOVE_RIGHT} change={changeMovementDirection} selected={movementDirection === MOVE_RIGHT}/>
 
                 {/* bottom row */}
-                <div className="btn-wrapper">
-                    <div
-                        className={'action-btn movement lean-down icon-rotate-90 ' + (movementDirection === MOVE_DOWN ? 'selected' : '')}
-                        title="Пригнуться"
-                        onClick={() => changeMovementDirection(MOVE_DOWN)}
-                    >
-                        <i className="tr-bordered-arrow"/>
-                    </div>
-                </div>
+                <div className="btn-wrapper" />
+                <ControlButton action={MOVE_DOWN} change={changeMovementDirection} selected={movementDirection === MOVE_DOWN}/>
+                <div className="btn-wrapper" />
 
-                <button className="end-turn">
+                <button className="end-turn" onClick={act}>
                     Завершить ход
                 </button>
 
