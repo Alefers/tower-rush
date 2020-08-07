@@ -1,3 +1,5 @@
+import {STANCE_DEFENCE, STANCE_ATTACK, STANCE_DISTANCE} from "../../app/fight/BattleControls";
+
 const ACT = 'ACT';
 
 let initialState = {
@@ -29,8 +31,21 @@ let initialState = {
         vit: 17,
         dex: 5
     },
-    messages: []
+    messages: [],
+    battle: {
+        step: 0,
+        stance: STANCE_DEFENCE
+    }
 };
+
+// Математика пока на нуле, коэфициенты и формулы только для запуска основных просчётов.
+
+const isPlayerFirst = (player, guard) => {
+    const border = 0.5 + (player.dex - guard.dex) * 0.003;
+    const rand = Math.random();
+
+    return rand < border;
+}
 
 const fightReducer = (state = initialState, action) => {
 
@@ -38,7 +53,9 @@ const fightReducer = (state = initialState, action) => {
 
     switch (action.type) {
         case ACT:
-            console.log(action.action);
+            if (isPlayerFirst(state.player, state.guard)) {
+
+            }
             return stateCopy;
         default:
             return state;

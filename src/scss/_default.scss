@@ -28,3 +28,13 @@ button {
   cursor: pointer;
   font: 500 14px/1.5 $default-font;
 }
+a {
+  color: $link-color;
+  font-weight: 500;
+  transition: $transition-rules;
+  text-decoration: none;
+
+  &:hover {
+    color: $link-hover-color;
+  }
+}

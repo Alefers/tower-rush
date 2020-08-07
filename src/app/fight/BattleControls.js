@@ -1,23 +1,31 @@
 import React, {useState} from 'react';
 import ControlButton, {MOVE_NOT, MOVE_DOWN, MOVE_RIGHT, MOVE_LEFT, MOVE_JUMP} from "./ControlButton";
 
+export const
+    STANCE_DEFENCE = 0,
+    STANCE_ATTACK = 1,
+    STANCE_DISTANCE = 2;
+
+const stanceSet = [
+    {
+        type: STANCE_DEFENCE,
+        stance: 'defence',
+        text: 'Защищаться'
+    },
+    {
+        type: STANCE_ATTACK,
+        stance: 'attack',
+        text: 'Атаковать'
+    },
+    {
+        type: STANCE_DISTANCE,
+        stance: 'distance',
+        text: 'Разорвать дистанцию'
+    }
+];
 
 const  BattleControls = (props) => {
 
-    const stanceSet = [
-        {
-            stance: 'attack',
-            text: 'Атаковать'
-        },
-        {
-            stance: 'defence',
-            text: 'Защищаться'
-        },
-        {
-            stance: 'distance',
-            text: 'Разорвать дистанцию'
-        }
-    ];
     const [stanceSelectOpen, setStanceSelectOpen] = useState(false);
     const toggleStanceSelectOpen = () => {
         setStanceSelectOpen(!stanceSelectOpen);
@@ -45,9 +53,9 @@ const  BattleControls = (props) => {
         });
     }
 
-    let stances = stanceSet.map((s, idx) => {
+    let stances = stanceSet.map((s) => {
         return (
-            <div className="btn-wrapper" key={idx}>
+            <div className="btn-wrapper" key={s.type}>
                 <button
                     type="button"
                     className={'action-btn stance ' + s.stance}
