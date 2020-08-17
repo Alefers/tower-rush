@@ -1,6 +1,6 @@
 import Fight from "./Fight";
 import {connect} from "react-redux";
-import {actCreator} from "../../redux/reducers/fight-reducer";
+import {stepCreator} from "../../redux/reducers/fight-reducer";
 
 let mapStateToProps = (state) => {
     return {
@@ -11,8 +11,8 @@ let mapStateToProps = (state) => {
 }
 let mapDispatchToProps = (dispatch) => {
     return {
-        act: (action) => {
-            dispatch(actCreator(action));
+        step: (action) => {
+            dispatch(stepCreator(action));
         }
     }
 }

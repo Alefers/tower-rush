@@ -46,8 +46,9 @@ const  BattleControls = (props) => {
         }
     }
 
-    const act = () => {
-        props.act({
+    const makeAStep = () => {
+        console.log(2);
+        props.step({
             movementDirection,
             stance: currentStance
         });
@@ -95,7 +96,7 @@ const  BattleControls = (props) => {
                 <ControlButton action={MOVE_DOWN} change={changeMovementDirection} selected={movementDirection === MOVE_DOWN}/>
                 <div className="btn-wrapper" />
 
-                <button className="end-turn" onClick={act}>
+                <button className="end-turn" onClick={makeAStep}>
                     Завершить ход
                 </button>
 

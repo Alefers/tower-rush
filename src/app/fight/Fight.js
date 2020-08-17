@@ -8,7 +8,7 @@ const  Fight = (props) => {
         <>
             <div className="fight-room">
                 <Target stats={props.player} />
-                <BattleControls act={props.act}/>
+                <BattleControls step={props.step}/>
                 <Target oposite={true} stats={props.guard} />
             </div>
             <Chat messages={props.messages} />

@@ -1,16 +1,14 @@
 import {STANCE_DEFENCE, STANCE_ATTACK, STANCE_DISTANCE} from "../../app/fight/BattleControls";
 
-const ACT = 'ACT';
+const STEP = 'STEP';
 
 let initialState = {
     player: {
-        level: 1,
         maxEssence: 30,
         currentEssence: 25,
         str: 5,
         vit: 5,
-        dex: 5,
-        freePoints: 10,
+        agi: 5,
         skills: {
             twoHandedSword: 1,
             twoHandedAxe: 1,
@@ -24,37 +22,63 @@ let initialState = {
         }
     },
     guard: {
-        level: 6,
         maxEssence: 40,
         currentEssence: 37,
         str: 12,
         vit: 17,
-        dex: 5
+        agi: 5
     },
     messages: [],
     battle: {
         step: 0,
-        stance: STANCE_DEFENCE
+        player: {
+            lastStance: null,
+        },
+        guard: {
+            lastStance: null,
+            combo: {
+                active: false,
+                step: 0,
+                name: null
+            },
+            state: {
+                name: null,
+                stepsLeft: 0
+            }
+        }
     }
 };
 
 // Математика пока на нуле, коэфициенты и формулы только для запуска основных просчётов.
 
-const isPlayerFirst = (player, guard) => {
-    const border = 0.5 + (player.dex - guard.dex) * 0.003;
+const isReactFirst = (pAgi, gAgi) => {
+    const border = 0.5 + (pAgi - gAgi) * 0.003;
     const rand = Math.random();
 
     return rand < border;
 }
+
+const calcGuardStance = (guard, battle) => {
+    const rand = Math.random();
+    const lastStance = battle.player.lastStance;
+    if (lastStance === STANCE_ATTACK) {
+        return (rand < 70) ? STANCE_DEFENCE : STANCE_ATTACK;
+    }
+    if (lastStance === STANCE_DEFENCE || lastStance === STANCE_DISTANCE) {
+        return STANCE_ATTACK;
+    }
+    return (rand < 50) ? STANCE_DEFENCE : STANCE_ATTACK;
+};
 
 const fightReducer = (state = initialState, action) => {
 
     let stateCopy = {...state};
 
     switch (action.type) {
-        case ACT:
-            if (isPlayerFirst(state.player, state.guard)) {
-
+        case STEP:
+            const playerFirst = isReactFirst(state.player.agi, state.guard.agi);
+            if (playerFirst) {
+                console.log(1);
             }
             return stateCopy;
         default:
@@ -62,6 +86,6 @@ const fightReducer = (state = initialState, action) => {
     }
 }
 
-export const actCreator = (action) => ({type: ACT, action: action});
+export const stepCreator = (action) => ({type: STEP, action: action});
 
 export default fightReducer;
