@@ -4,11 +4,21 @@ const STEP = 'STEP';
 
 let initialState = {
     player: {
-        maxEssence: 30,
-        currentEssence: 25,
+        essence: {
+            max: 30,
+            current: 30
+        },
+        stamina: {
+            max: 50,
+            current: 50
+        },
         str: 5,
         vit: 5,
         agi: 5,
+        damage: {
+            min: 5,
+            max: 8
+        },
         skills: {
             twoHandedSword: 1,
             twoHandedAxe: 1,
@@ -22,11 +32,25 @@ let initialState = {
         }
     },
     guard: {
-        maxEssence: 40,
-        currentEssence: 37,
+        essence: {
+            max: 30,
+            current: 30
+        },
+        stamina: {
+            max: 50,
+            current: 50
+        },
         str: 12,
         vit: 17,
-        agi: 5
+        agi: 5,
+        damage: {
+            min: 5,
+            max: 8
+        },
+        currentWeapon: 'twoHandedSword',
+        skills: {
+            twoHandedSword: 1,
+        }
     },
     messages: [],
     battle: {
@@ -70,6 +94,24 @@ const calcGuardStance = (guard, battle) => {
     return (rand < 50) ? STANCE_DEFENCE : STANCE_ATTACK;
 };
 
+const isDodged = (attacker, victim, battle) => {
+    const rand = Math.random();
+    const agiDif = victim.agi - attacker.agi
+    const weaponSkillDif = attacker.skills[attacker.currentWeapon] - victim.skills[victim.currentWeapon];
+    let chanceToDodge = 0.05 + (agiDif > 0 ? agiDif * 0.0075 : 0) - (weaponSkillDif > 0 ? weaponSkillDif * 0.008 : 0);
+    if (chanceToDodge > 0.95) {
+        chanceToDodge = 0.95;
+    }
+    if (chanceToDodge < 0.05) {
+        chanceToDodge = 0.05;
+    }
+    return rand < chanceToDodge;
+}
+
+const isBlocked = (attacker, victim, battle) => {
+    const rand = Math.random();
+}
+
 const fightReducer = (state = initialState, action) => {
 
     let stateCopy = {...state};
@@ -77,8 +119,16 @@ const fightReducer = (state = initialState, action) => {
     switch (action.type) {
         case STEP:
             const playerFirst = isReactFirst(state.player.agi, state.guard.agi);
+            const guardStance = calcGuardStance(state.guard, state.battle);
+            const position = [action.data.stance, guardStance].join('');
             if (playerFirst) {
-                console.log(1);
+                switch (position) {
+                    case '00':
+                        break;
+
+                }
+            } else {
+
             }
             return stateCopy;
         default:
@@ -86,6 +136,6 @@ const fightReducer = (state = initialState, action) => {
     }
 }
 
-export const stepCreator = (action) => ({type: STEP, action: action});
+export const stepCreator = (action) => ({type: STEP, data: action});
 
 export default fightReducer;

@@ -47,10 +47,9 @@ const  BattleControls = (props) => {
     }
 
     const makeAStep = () => {
-        console.log(2);
         props.step({
             movementDirection,
-            stance: currentStance
+            stance: currentStance.type
         });
     }
 

@@ -5,8 +5,8 @@ const  Dialog = (props) => {
     return (
         <div className="dialog">
             <div className="link-to-story">
-                <a href="https://docs.google.com/document/d/1IXZQoMaleEeaa8e2mwWELZjKkRVHRUf9e9eTleMM2Ks/edit?usp=sharing">
-                    Тут лёгкое чтиво о сюжете и механике игры.
+                <a href="https://drive.google.com/drive/folders/1pR7xi9mvd5GRldRMAivg7SlB-sWpTD_6?usp=sharing">
+                    Всё описание игры.
                 </a>
             </div>
             <div className="link-to-fight">

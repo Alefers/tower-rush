@@ -5,7 +5,8 @@ const  Target = (props) => {
     return (
         <div className={'target' + (props.oposite ? ' oposite' : '')}>
             <div className="stats">
-                <Bar type="essence" max={props.stats.maxEssence} current={props.stats.currentEssence} text="Сущность" oposite={props.oposite}/>
+                <Bar type="essence" stat={props.stats.essence} oposite={props.oposite} text="Эссенция" />
+                <Bar type="stamina" stat={props.stats.stamina} oposite={props.oposite} text="Усталость"/>
             </div>
             <div className="equipment">
                 <img src="/img/target.png" alt="Equipment"/>
