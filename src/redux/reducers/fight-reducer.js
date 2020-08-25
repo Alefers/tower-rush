@@ -1,4 +1,5 @@
 import {STANCE_DEFENCE, STANCE_ATTACK, STANCE_DISTANCE} from "../../app/fight/BattleControls";
+import {Gauss} from "../../mixin/math";
 
 const STEP = 'STEP';
 
@@ -75,9 +76,21 @@ let initialState = {
 
 // Математика пока на нуле, коэфициенты и формулы только для запуска основных просчётов.
 
+const gauss0 = new Gauss();
+
+const saveResultTruncation = (min, max, value) => {
+    if (min > max || value > max) {
+        return max;
+    }
+    if (value < min) {
+        return min;
+    }
+    return value;
+}
+
 const isReactFirst = (pAgi, gAgi) => {
-    const border = 0.5 + (pAgi - gAgi) * 0.003;
-    const rand = Math.random();
+    const rand = Math.random() * 100;
+    const border = 50 + (pAgi - gAgi) * 0.3;
 
     return rand < border;
 }
@@ -91,25 +104,32 @@ const calcGuardStance = (guard, battle) => {
     if (lastStance === STANCE_DEFENCE || lastStance === STANCE_DISTANCE) {
         return STANCE_ATTACK;
     }
+
     return (rand < 50) ? STANCE_DEFENCE : STANCE_ATTACK;
 };
 
 const isDodged = (attacker, victim, battle) => {
-    const rand = Math.random();
+    const rand = Math.random() * 100;
     const agiDif = victim.agi - attacker.agi
     const weaponSkillDif = attacker.skills[attacker.currentWeapon] - victim.skills[victim.currentWeapon];
-    let chanceToDodge = 0.05 + (agiDif > 0 ? agiDif * 0.0075 : 0) - (weaponSkillDif > 0 ? weaponSkillDif * 0.008 : 0);
-    if (chanceToDodge > 0.95) {
-        chanceToDodge = 0.95;
-    }
-    if (chanceToDodge < 0.05) {
-        chanceToDodge = 0.05;
-    }
+    let chanceToDodge = 5 + (agiDif > 0 ?? agiDif * 0.75) - (weaponSkillDif > 0 ?? weaponSkillDif * 0.8);
+    chanceToDodge = saveResultTruncation(5, 95, chanceToDodge);
+
     return rand < chanceToDodge;
 }
 
-const isBlocked = (attacker, victim, battle) => {
-    const rand = Math.random();
+const isBlocked = (attacker, attackerFirst, victim, victimStance, battle) => {
+    const rand = Math.random() * 100;
+    const weaponSkillDif = attacker.skills[attacker.currentWeapon] - victim.skills[victim.currentWeapon];
+    let chanceToBlock = 10 + (victimStance === STANCE_DEFENCE ?? 50) + (attackerFirst ?? 5) - (weaponSkillDif > 0 ?? weaponSkillDif * 0.8);
+    chanceToBlock = saveResultTruncation(5, 95, chanceToBlock);
+
+    return rand < chanceToBlock;
+}
+
+const calcDamage = (attacker, attackerFirst, victim, victimStance, battle) => {
+
+    return 3;
 }
 
 const fightReducer = (state = initialState, action) => {
@@ -119,8 +139,12 @@ const fightReducer = (state = initialState, action) => {
     switch (action.type) {
         case STEP:
             const playerFirst = isReactFirst(state.player.agi, state.guard.agi);
+            const playerStance = action.data.stance;
             const guardStance = calcGuardStance(state.guard, state.battle);
-            const position = [action.data.stance, guardStance].join('');
+            const position = [playerStance, guardStance].join('');
+            for (let i = 0; i < 10; i++) {
+                console.log(gauss0.next());
+            }
             if (playerFirst) {
                 switch (position) {
                     case '00':
