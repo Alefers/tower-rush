@@ -1,14 +1,14 @@
 export class Gauss {
-    #ready = false;
-    #second = 0.0;
+    ready = false;
+    second = 0.0;
 
     next(mean = undefined, dev = undefined) {
         mean = mean === undefined ? 0.0 : mean;
         dev = dev === undefined ? 1.0 : dev;
 
-        if (this.#ready) {
-            this.#ready = false;
-            return this.#second * dev + mean;
+        if (this.ready) {
+            this.ready = false;
+            return this.second * dev + mean;
         }
         else {
             let u, v, s;
@@ -19,9 +19,22 @@ export class Gauss {
             } while (s > 1.0 || s === 0.0);
 
             let r = Math.sqrt(-2.0 * Math.log(s) / s);
-            this.#second = r * u;
-            this.#ready = true;
+            this.second = r * u;
+            this.ready = true;
             return r * v * dev + mean;
         }
     };
 }
+const trMath = {
+    saveResultTruncation(min, max, value) {
+        if (min > max || value > max) {
+            return max;
+        }
+        if (value < min) {
+            return min;
+        }
+        return value;
+    }
+}
+
+export default trMath;

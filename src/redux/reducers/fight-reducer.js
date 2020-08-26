@@ -1,10 +1,17 @@
 import {STANCE_DEFENCE, STANCE_ATTACK, STANCE_DISTANCE} from "../../app/fight/BattleControls";
-import {Gauss} from "../../mixin/math";
+import trMath from "../../mixin/math";
+
+const
+    ATTACK_DODGED = 0,
+    ATTACK_BLOCKED = 1,
+    ATTACK_SECCESS = 2,
+    ATTACKER_DEAD = 3;
 
 const STEP = 'STEP';
 
 let initialState = {
     player: {
+        type: 'player',
         essence: {
             max: 30,
             current: 30
@@ -33,6 +40,7 @@ let initialState = {
         }
     },
     guard: {
+        type: 'guard',
         essence: {
             max: 30,
             current: 30
@@ -76,23 +84,11 @@ let initialState = {
 
 // Математика пока на нуле, коэфициенты и формулы только для запуска основных просчётов.
 
-const gauss0 = new Gauss();
-
-const saveResultTruncation = (min, max, value) => {
-    if (min > max || value > max) {
-        return max;
-    }
-    if (value < min) {
-        return min;
-    }
-    return value;
-}
-
-const isReactFirst = (pAgi, gAgi) => {
+const getActFirst = (playerAgi, guardAgi) => {
     const rand = Math.random() * 100;
-    const border = 50 + (pAgi - gAgi) * 0.3;
+    const border = 50 + (playerAgi - guardAgi) * 0.3;
 
-    return rand < border;
+    return rand < border ? 'player' : 'guard';
 }
 
 const calcGuardStance = (guard, battle) => {
@@ -108,28 +104,54 @@ const calcGuardStance = (guard, battle) => {
     return (rand < 50) ? STANCE_DEFENCE : STANCE_ATTACK;
 };
 
-const isDodged = (attacker, victim, battle) => {
+const isDodged = (attacker, victim, battle = {}) => {
     const rand = Math.random() * 100;
     const agiDif = victim.agi - attacker.agi
     const weaponSkillDif = attacker.skills[attacker.currentWeapon] - victim.skills[victim.currentWeapon];
     let chanceToDodge = 5 + (agiDif > 0 ?? agiDif * 0.75) - (weaponSkillDif > 0 ?? weaponSkillDif * 0.8);
-    chanceToDodge = saveResultTruncation(5, 95, chanceToDodge);
+    chanceToDodge = trMath.saveResultTruncation(5, 95, chanceToDodge);
 
     return rand < chanceToDodge;
 }
 
-const isBlocked = (attacker, attackerFirst, victim, victimStance, battle) => {
+const isBlocked = (attacker, actFirst, victim, victimStance, battle = {}) => {
     const rand = Math.random() * 100;
     const weaponSkillDif = attacker.skills[attacker.currentWeapon] - victim.skills[victim.currentWeapon];
-    let chanceToBlock = 10 + (victimStance === STANCE_DEFENCE ?? 50) + (attackerFirst ?? 5) - (weaponSkillDif > 0 ?? weaponSkillDif * 0.8);
-    chanceToBlock = saveResultTruncation(5, 95, chanceToBlock);
+    let chanceToBlock = 10 + (victimStance === STANCE_DEFENCE ?? 50) + ((actFirst === attacker.type) ?? 5) - (weaponSkillDif > 0 ?? weaponSkillDif * 0.8);
+    chanceToBlock = trMath.saveResultTruncation(5, 95, chanceToBlock);
 
     return rand < chanceToBlock;
 }
 
-const calcDamage = (attacker, attackerFirst, victim, victimStance, battle) => {
+const calcDamage = (attacker, actFirst, victim, victimStance, battle = {}) => {
 
     return 3;
+}
+
+const isDead = (victim, damage) => {
+    return victim.essence.current <= damage;
+}
+
+const calcAttackersStep = (attacker, actFirst, victim, victimStance) => {
+    let stepResult = {
+        attacker: attacker.type
+    };
+
+    // victim chance to dodge
+    if (isDodged(attacker, victim)) {
+        stepResult.type = ATTACK_DODGED;
+    } else {
+        // victim chance to block
+        if (isBlocked(attacker, actFirst, victim, victimStance)) {
+            stepResult.type = ATTACK_BLOCKED;
+        } else {
+            // victim damage taken
+            stepResult.type = ATTACK_SECCESS;
+            stepResult.value = calcDamage(attacker, actFirst, victim, victimStance);
+        }
+    }
+
+    return stepResult;
 }
 
 const fightReducer = (state = initialState, action) => {
@@ -138,22 +160,42 @@ const fightReducer = (state = initialState, action) => {
 
     switch (action.type) {
         case STEP:
-            const playerFirst = isReactFirst(state.player.agi, state.guard.agi);
+            const actFirst = getActFirst(state.player.agi, state.guard.agi);
             const playerStance = action.data.stance;
             const guardStance = calcGuardStance(state.guard, state.battle);
             const position = [playerStance, guardStance].join('');
-            for (let i = 0; i < 10; i++) {
-                console.log(gauss0.next());
-            }
-            if (playerFirst) {
-                switch (position) {
-                    case '00':
+            let stepResultList = {};
+
+            switch (position) {
+                case '11': // both attack stance
+                    stepResultList.first = calcAttackersStep(state.player, actFirst, state.guard, guardStance);
+
+                    if (stepResultList.first.type === ATTACK_SECCESS && isDead(state.guard, stepResultList.first.value)) {
                         break;
+                    }
 
-                }
-            } else {
+                    stepResultList.second = calcAttackersStep(state.guard, actFirst, state.player, playerStance);
 
+                    // TODO: calc quickStrike
+
+                    break;
+
+                case '01':
+                case '10':
+
+                    stepResultList.first = calcAttackersStep(state.player, actFirst, state.guard, guardStance);
+
+                    if (stepResultList.first.type === ATTACK_SECCESS && isDead(state.guard, stepResultList.first.value)) {
+                        break;
+                    }
+
+                    stepResultList.second = calcAttackersStep(state.guard, actFirst, state.player, playerStance);
+
+                    // TODO: calc quickStrike
+
+                    break;
             }
+
             return stateCopy;
         default:
             return state;
