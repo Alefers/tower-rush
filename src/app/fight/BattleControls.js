@@ -4,9 +4,10 @@ import ControlButton, {MOVE_NOT, MOVE_DOWN, MOVE_RIGHT, MOVE_LEFT, MOVE_JUMP} fr
 export const
     STANCE_DEFENCE = 0,
     STANCE_ATTACK = 1,
-    STANCE_DISTANCE = 2;
+    STANCE_DISTANCE = 2,
+    STANCE_ACTION = 3;
 
-const stanceSet = [
+export const stanceSet = [
     {
         type: STANCE_DEFENCE,
         stance: 'defence',
@@ -21,7 +22,12 @@ const stanceSet = [
         type: STANCE_DISTANCE,
         stance: 'distance',
         text: 'Разорвать дистанцию'
-    }
+    },
+    {
+        type: STANCE_ACTION,
+        stance: 'action',
+        text: 'Совершить действие'
+    },
 ];
 
 const  BattleControls = (props) => {
